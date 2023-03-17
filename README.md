@@ -1,2 +1,3 @@
-# major_project_gan
-Repository for project work done in final year of B. Tech
+#Text guided generation and manipulation of human face image
+
+Project Abstract :
