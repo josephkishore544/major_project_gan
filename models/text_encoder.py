@@ -18,3 +18,8 @@ class TextEncoder(nn.Module) :
   def forward(self,sentence_embedding) :
     res = self.encode_text(sentence_embedding)
     return res
+
+  def load_model(path) :
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    ckpt = torch.load(path,map_location = device)
+    self.load_state_dict(ckpt,strict=True)
