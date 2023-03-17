@@ -33,7 +33,7 @@ class GradualStyleBlock(Module):
 
 
 class GradualStyleEncoder(Module):
-    def __init__(self, num_layers, mode='ir', opts=None):
+    def __init__(self, num_layers,input_nc, n_styles, mode='ir', opts=None):
         super(GradualStyleEncoder, self).__init__()
         assert num_layers in [50, 100, 152], 'num_layers should be 50,100, or 152'
         assert mode in ['ir', 'ir_se'], 'mode should be ir or ir_se'
@@ -42,7 +42,7 @@ class GradualStyleEncoder(Module):
             unit_module = bottleneck_IR
         elif mode == 'ir_se':
             unit_module = bottleneck_IR_SE
-        self.input_layer = Sequential(Conv2d(opts.input_nc, 64, (3, 3), 1, 1, bias=False),
+        self.input_layer = Sequential(Conv2d(input_nc, 64, (3, 3), 1, 1, bias=False),
                                       BatchNorm2d(64),
                                       PReLU(64))
         modules = []
@@ -54,7 +54,7 @@ class GradualStyleEncoder(Module):
         self.body = Sequential(*modules)
 
         self.styles = nn.ModuleList()
-        self.style_count = opts.n_styles
+        self.style_count = n_styles
         self.coarse_ind = 3
         self.middle_ind = 7
         for i in range(self.style_count):
