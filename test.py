@@ -1,4 +1,4 @@
-from models.StyleGAN2 import StyleGAN2
+from models.stylegan_model import StyleGAN2
 from utils.common import tensor2im
 import torch
 import PIL.Image
