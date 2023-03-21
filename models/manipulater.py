@@ -5,7 +5,7 @@ latent_direction_file_name = {
     'age' : 'age.npy',
     'gender' : 'gender.npy',
     'smile' : 'smile.npy',
-    'eyes opne' : 'eyes_opne.npy',
+    'eyes open' : 'eyes_open.npy',
     'mouth open' : 'mouth_open.npy',
     'chubby' : 'pitch.npy',
     'nose' : 'nose_ratio.npy',
