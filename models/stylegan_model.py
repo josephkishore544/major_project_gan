@@ -1,5 +1,6 @@
 from models.stylegan2.model import Generator
 
+# Class to load and use StyleGAN2
 class StyleGAN2 :
     def __init__(self,output_size = 1024, w_dim = 512, mlp = 8) :
         self.generator = Generator(output_size, w_dim, mlp)

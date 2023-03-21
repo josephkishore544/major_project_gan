@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-# TextEncoder Model
+# CLass to load and use TextEncoder Model
 # Its a simple fully connected neural network
 class TextEncoder(nn.Module) :
   def __init__(self, input_features = 768, output_features = 37) :

@@ -1,5 +1,8 @@
 from model import Model
 
+# This class is an API for model.py
+# Allows us to load data at different 
+# steps at front-end and execute at once
 class Handler :
     def __init__(self) :
         self.model = Model()

@@ -13,6 +13,8 @@ latent_direction_file_name = {
 
 latent_direction_folder_path = 'models/lantentdirections/'
 
+# Class to perform Latent Manipulation
+# Add a text classifier
 class LatentManipulator :
     def __init__(self) :
         pass

@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-# LatentCodeDecoder Model
+# Class to load and use LatentCodeDecoder Model
 # Its a simple fully connected neural network
 class LatentCodeDecoder(nn.Module) :
   def __init__(self, input_features = 37, output_features = 9216) :

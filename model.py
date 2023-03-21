@@ -10,14 +10,26 @@ from configs.paths import get_path
 import torch
 import PIL.Image
 
-
+# Wrapper Class to load all models
+# Has to methods
+#   generate()
+#   manipulate()
 class Model() :
     def __init__(self) :
         self.sbert = sbert(get_path('sbert'))
+
         self.inverter = Inverter()
+        self.inverter.load_model(get_path('inversion'))
+
         self.stylegan = StyleGAN2()
+        self.stylegan.load_model(get_path('stylegan2'))
+
         self.text_encoder = TextEncoder()
+        self.text_encoder.load_model(get_path('text_encoder'))
+
         self.latent_code_decoder = LatentCodeDecoder()
+        self.latent_code_decoder.load_model(get_path('latent_code_decoder'))
+
         self.lantent_manipulator = LatentManipulator()
     
     def save_image(self,image,type) :
@@ -43,6 +55,7 @@ class Model() :
         return True
     
     def manipulate(self, text, image_input_mode = 'last') :
+        # Reads the image at test/input.jpg and manipulates and saves as manipulated.jpg
         try :
             with torch.no_grad() :
                 if image_input_mode == 'upload' :
