@@ -5,7 +5,7 @@ MODEL_PATHS = {
     'inversion' : 'models/trained_models/psp_ffhq_encode.pt',
     'stylegan2' : 'models/trained_models/psp_ffhq_encode.pt',
     'direction_classifier' : 'models/trained_models/direction_classifier.pt',
-    'shape_predictor' : 'shape_predictor_68_face_landmarks.dat'
+    'shape_predictor' : 'models.trained_models/shape_predictor_68_face_landmarks.dat'
 }
 
 def get_path(key) :
