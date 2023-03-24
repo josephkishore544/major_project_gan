@@ -4,6 +4,7 @@ from models.stylegan_model import StyleGAN2
 from models.text_encoder import TextEncoder
 from models.latent_code_decoder import LatentCodeDecoder
 from models.manipulater import LatentManipulator
+from models.direction_classifier import DirectionClassifier
 from utils.common import tensor2im
 from utils.image_preprocess import image_preprocess
 from configs.paths import get_path
@@ -11,9 +12,8 @@ import torch
 import PIL.Image
 
 # Wrapper Class to load all models
-# Has to methods
-#   generate()
-#   manipulate()
+# Has two methods
+# 1-generate()  2-manipulate()
 class Model() :
     def __init__(self) :
         self.sbert = sbert(get_path('sbert'))
@@ -29,6 +29,9 @@ class Model() :
 
         self.latent_code_decoder = LatentCodeDecoder()
         self.latent_code_decoder.load_model(get_path('latent_code_decoder'))
+        
+        self.direction_classifier = DirectionClassifier()
+        self.direction_classifier.load_model(get_path('direction_classifier'))
 
         self.lantent_manipulator = LatentManipulator()
     
@@ -41,7 +44,7 @@ class Model() :
         save_output_image.save(file_save_path)
     
     def generate(self,text) :
-        # Generates a image from text and saves in text/ folder as generated.jpg
+        # Generates a image from text and saves as test/generated.jpg
         try :
             with torch.no_grad() :
                 sentence_embedding = self.sbert.encode(text)
@@ -55,7 +58,9 @@ class Model() :
         return True
     
     def manipulate(self, text, image_input_mode = 'last') :
-        # Reads the image at test/input.jpg and manipulates and saves as manipulated.jpg
+        # Reads the image at test/input.jpg if image_input_mode='upload'
+        # or at test/generated.jpg if image_input_mode='last'
+        # manipulates and saves as manipulated.jpg
         try :
             with torch.no_grad() :
                 if image_input_mode == 'upload' :
@@ -64,7 +69,9 @@ class Model() :
                     image_path = 'test/generated.jpg'
                 preprocessed_image = image_preprocess(image_path)
                 latent_code = self.inverter.invert(preprocessed_image)
-                attribute,effect = text.split(',')
+                sentence_embedding = self.sbert.encode(text)
+                label_proba = self.direction_classifier(text)
+                attribute,effect = self.direction_classifier.get_label(label_proba)
                 new_latent_code = self.lantent_manipulator.manipulate_latent(attribute, effect)
                 modified_image = self.stylegan.generate(new_latent_code)
             save_image(modified_image,'man')
