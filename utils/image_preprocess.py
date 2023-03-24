@@ -1,9 +1,10 @@
 import dlib
 from utils.align_all_parallel import align_face
+from configs.paths import get_path
 import torchvision.transforms as transforms
 
 def run_alignment(image_path):
-  predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
+  predictor = dlib.shape_predictor(get_path('shape_predictor'))
   aligned_image = align_face(filepath=image_path, predictor=predictor)
   return aligned_image
 
