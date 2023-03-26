@@ -1,4 +1,6 @@
+import torch
 from torch import nn
+import numpy as np 
 
 # For multi class prediction, output features = number of classes
 class DirectionClassifier(nn.Module) :
@@ -18,6 +20,7 @@ class DirectionClassifier(nn.Module) :
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         ckpt = torch.load(path,map_location = device)
         self.load_state_dict(ckpt,strict=True)
+        self.classifer.to(device=device)
 
     def get_label(self,label_proba) :
         class_label_list = ['age+', 'age-', 'gender+', 'gender-', 'eye_open+', 'eye_open-', 'mouth_open+', 'mouth_open-', 'smile+', 'smile-', 'nose+', 'nose-', 'pitch+', 'pitch-']

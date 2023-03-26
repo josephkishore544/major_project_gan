@@ -26,10 +26,13 @@ class LatentCodeDecoder(nn.Module) :
                         nn.Linear(output_features, output_features)
                       )
   def forward(self,attribute_labels) :
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     res = self.decode_labels(attribute_labels)
+    res = res.to(device=device)
     return res
 
   def load_model(self, path) :
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = torch.load(path,map_location = device)
     self.load_state_dict(ckpt,strict=True)
+    self.decode_labels.to(device=device)

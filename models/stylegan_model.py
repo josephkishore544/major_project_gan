@@ -1,4 +1,5 @@
 from models.stylegan2.model import Generator
+import torch
 
 # Class to load and use StyleGAN2
 class StyleGAN2 :
@@ -6,12 +7,12 @@ class StyleGAN2 :
         self.generator = Generator(output_size, w_dim, mlp)
         
     def generate(self,latent_codes) :
-        with torch.no_grad() :
-            res = self.generator([latent_codes],
-                                input_is_latent = True, # input_is_latent = not input_code
-                                randomize_noise = True
-                                )
-        return res[0]
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        res = self.generator([latent_codes],
+                            input_is_latent = True, # input_is_latent = not input_code
+                            randomize_noise = True
+                            )
+        return res[0][0]
     
     def get_keys(self, d, name):
         if 'state_dict' in d:

@@ -11,7 +11,7 @@ latent_direction_file_name = {
     'nose' : 'nose_ratio.npy',
 }
 
-latent_direction_folder_path = 'models/lantentdirections/'
+latent_direction_folder_path = 'models/trained_models/latentdirections/'
 
 # Class to perform Latent Manipulation
 # Add a text classifier
@@ -28,11 +28,11 @@ class LatentManipulator :
         return latent_direction
 
     def manipulate_latent(self, latent_code, attribute, effect, strength = 8) :
-        latent_direction = load_latent_direction(attribute)
+        latent_direction = self.load_latent_direction(attribute)
         if effect == 'increase' :
             multiplier = 1
         elif effect == 'decrease' :
             multiplier = -1
         alpha = multiplier*strength
-        w_plus = inverted_latent_code + alpha*latent_direction
+        w_plus = latent_code + alpha*latent_direction
         return w_plus

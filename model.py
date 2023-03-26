@@ -10,6 +10,9 @@ from utils.image_preprocess import image_preprocess
 from configs.paths import get_path
 import torch
 import PIL.Image
+import numpy as np
+import sys
+import traceback
 
 # Wrapper Class to load all models
 # Has two methods
@@ -35,10 +38,10 @@ class Model() :
 
         self.lantent_manipulator = LatentManipulator()
     
-    def save_image(self,image,type) :
-        if(type == 'gen') :
+    def save_image(self,image,type_) :
+        if(type_ == 'gen') :
             file_save_path = 'test/generated.jpg'
-        elif(type == 'man') :
+        elif(type_ == 'man') :
             file_save_path = 'test/manipulated.jpg'
         save_output_image = PIL.Image.fromarray(np.array(tensor2im(image)))
         save_output_image.save(file_save_path)
@@ -48,12 +51,13 @@ class Model() :
         try :
             with torch.no_grad() :
                 sentence_embedding = self.sbert.encode(text)
-                attribute_vector = self.text_encoder.encode_text(sentence_embedding)
-                latent_code = self.latent_code_decoder.decode_labels(attribute_vector)
+                attribute_vector = self.text_encoder(sentence_embedding)
+                latent_code = self.latent_code_decoder(attribute_vector)
                 latent_code = torch.reshape(latent_code,(1,18,512))
                 generated_image = self.stylegan.generate(latent_code)
-            save_image(generated_image,'gen')
+            self.save_image(generated_image,'gen')
         except Exception as e :
+            print(traceback.format_exc())
             return False
         return True
     
@@ -70,11 +74,12 @@ class Model() :
                 preprocessed_image = image_preprocess(image_path)
                 latent_code = self.inverter.invert(preprocessed_image)
                 sentence_embedding = self.sbert.encode(text)
-                label_proba = self.direction_classifier(text)
+                label_proba = self.direction_classifier(sentence_embedding)
                 attribute,effect = self.direction_classifier.get_label(label_proba)
-                new_latent_code = self.lantent_manipulator.manipulate_latent(attribute, effect)
+                new_latent_code = self.lantent_manipulator.manipulate_latent(latent_code, attribute, effect)
                 modified_image = self.stylegan.generate(new_latent_code)
-            save_image(modified_image,'man')
+            self.save_image(modified_image,'man')
         except Exception as e :
+            print(traceback.format_exc())
             return False
         return True

@@ -7,8 +7,11 @@ class Inverter :
         self.inversion_model = GradualStyleEncoder(num_layers = 50, input_nc = 3, n_styles = num_layers)
 
     def invert(self,image) :
-        latent_code = self.inversion_model(image)
-        return latent_code
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        latent_code = self.inversion_model(image.unsqueeze(0).to(device=device).float())
+        latent_code = latent_code.to(device=device)
+        res = latent_code + self.latent_avg.repeat(latent_code.shape[0],1,1)
+        return res
     
     def get_keys(self, d, name):
         if 'state_dict' in d:
@@ -19,5 +22,7 @@ class Inverter :
     def load_model(self, path) :
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         ckpt = torch.load(path,map_location = device)
+        self.latent_avg = ckpt['latent_avg']
+        self.latent_avg.to(device=device)
         self.inversion_model.load_state_dict(self.get_keys(ckpt,'encoder'),strict=True)
         self.inversion_model.to(device=device)

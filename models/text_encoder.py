@@ -16,10 +16,13 @@ class TextEncoder(nn.Module) :
                         nn.Linear(48,output_features)
                       )
   def forward(self,sentence_embedding) :
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     res = self.encode_text(sentence_embedding)
+    res = res.to(device=device)
     return res
 
   def load_model(self, path) :
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     ckpt = torch.load(path,map_location = device)
     self.load_state_dict(ckpt,strict=True)
+    self.encode_text.to(device=device)
