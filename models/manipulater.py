@@ -27,7 +27,7 @@ class LatentManipulator :
         latent_direction = latent_direction.unsqueeze(0).to(device = device).float()
         return latent_direction
 
-    def manipulate_latent(latent_code, attribute, effect, strength = 8) :
+    def manipulate_latent(self, latent_code, attribute, effect, strength = 8) :
         latent_direction = load_latent_direction(attribute)
         if effect == 'increase' :
             multiplier = 1

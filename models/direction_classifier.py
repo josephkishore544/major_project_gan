@@ -14,7 +14,7 @@ class DirectionClassifier(nn.Module) :
     def forward(self, sentence_embedding) :
         return self.classifer(sentence_embedding)
 
-    def load_model(path) :
+    def load_model(self, path) :
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         ckpt = torch.load(path,map_location = device)
         self.load_state_dict(ckpt,strict=True)

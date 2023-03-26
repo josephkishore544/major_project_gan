@@ -10,13 +10,13 @@ class Inverter :
         latent_code = self.inversion_model(image)
         return latent_code
     
-    def get_keys(d, name):
+    def get_keys(self, d, name):
         if 'state_dict' in d:
             d = d['state_dict']
         d_filt = {k[len(name) + 1:]: v for k, v in d.items() if k[:len(name)] == name}
         return d_filt
     
-    def load_model(path) :
+    def load_model(self, path) :
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         ckpt = torch.load(path,map_location = device)
         self.inversion_model.load_state_dict(self.get_keys(ckpt,'encoder'),strict=True)
