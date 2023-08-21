@@ -6,6 +6,7 @@ Generating human face images from textual descriptions is a challenging task tha
 
 
 Dataset :
+
 The dataset is collected from two sources
 
 https://github.com/ziqihuangg/CelebA-Dialog
@@ -21,4 +22,4 @@ The textual description of the CelebAMask-HQ images  generated as a part of the 
 
 Pretrained Networks :
 
-https://github.com/NVlabs/stylegan2
+https://drive.google.com/drive/folders/10Uy7uTDFwBaPozBjqjxHoy0Vxf2GOqlg?usp=drive_link
